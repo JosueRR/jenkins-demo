@@ -1,14 +1,11 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_USER     = credentials('dockerhub_user')
+        DOCKERHUB_USER = credentials('dockerhub_user')
         DOCKERHUB_PASSWORD = credentials('dockerhub_password')
     }
     stages {
-        stage('BuildTests') {
-            when {
-                branch 'develop'
-            }
+        stage("BuildTests") {
             steps {
                 echo 'Building tests...'
                 sh '''
@@ -17,10 +14,7 @@ pipeline {
                 '''
             }
         }
-        stage('RunTests') {
-            when {
-                branch 'develop'
-            }
+        stage("RunTests") {
             steps {
                 echo 'Running tests...'
                 sh '''
@@ -28,10 +22,7 @@ pipeline {
                 '''
             }
         }
-        stage('Build') {
-            when {
-                branch 'develop'
-            }
+        stage("Build") {
             steps {
                 echo 'Building docker images for deployment...'
                 sh '''
@@ -40,22 +31,16 @@ pipeline {
                 '''
             }
         }
-        stage('PushBuilds') {
-            when {
-                branch 'develop'
-            }
+        stage("PushBuilds") {
             steps {
                 echo "Pushing docker images to DockerHub..."
                 sh '''
-                    docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD
+                    echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USER --password-stdin
                     docker-compose -f docker-compose-dev.yml push
                 '''
             }
         }
-        stage('DeployDev') {
-            when {
-                branch 'develop'
-            }
+        stage("DeployDev") {
             steps {
                 echo "Deploying to development..."
                 sh '''
@@ -64,10 +49,7 @@ pipeline {
                 '''
             }
         }
-        stage('DeployProd') {
-            when {
-                branch 'master'
-            }
+        stage("DeployProd") {
             steps {
                 echo 'Deploying to production...'
                 sh '''
