@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       context: ./microservices/sum
     ports:
-      - '8090:8080'
+      - '8083:8080'
 
   SitioWeb:
     container_name: webpage-src
@@ -16,4 +16,4 @@ services:
       dockerfile: Dockerfile
       context: ./webpage-src
     ports:
-      - '8081:80'
+      - '8082:80'
