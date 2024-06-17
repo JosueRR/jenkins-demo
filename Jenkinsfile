@@ -1,8 +1,14 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_USER = credentials('dockerhub_user')
+        DOCKERHUB_USER     = credentials('dockerhub_user')
         DOCKERHUB_PASSWORD = credentials('dockerhub_password')
+
+        // Usar la misma IP para DEV y PROD, pero cambiar según tus necesidades
+        DEV_URL = '34.135.155.106:8082'
+        PROD_URL = '34.135.155.106:8083'
+
+        JENKINS_HOME = '/home/jenkins'
     }
     stages {
         stage("BuildTests") {
