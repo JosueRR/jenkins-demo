@@ -2,24 +2,131 @@
     <head>
         <title>Demo Jenkins</title>
         <script
-			  src="https://code.jquery.com/jquery-3.5.1.js"
-			  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-              crossorigin="anonymous"></script>
+            src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+            crossorigin="anonymous"></script>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background: linear-gradient(135deg, #ffcc33, #ff6699, #66ccff);
+                background-size: 400% 400%;
+                animation: gradientBG 15s ease infinite;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                color: #333;
+            }
+            @keyframes gradientBG {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 20px;
+                margin-top: -50px;
+            }
+            .header h1 {
+                color: #fff;
+                font-size: 48px;
+                margin: 0;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .container {
+                background-color: #fff;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                text-align: center;
+                width: 300px;
+            }
+            h2 {
+                margin: 0 0 20px;
+                color: #ffcc33;
+            }
+            label {
+                display: block;
+                margin-top: 10px;
+                font-size: 18px;
+                text-align: left;
+                color: #333;
+            }
+            input[type="number"] {
+                width: 100%;
+                padding: 10px;
+                margin-top: 5px;
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                text-align: center;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+                transition: border-color 0.3s;
+                font-size: 18px;
+            }
+            input[type="number"]:focus {
+                border-color: #ff6699;
+                outline: none;
+            }
+            button {
+                background-color: #ffcc33;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 18px;
+                transition: background-color 0.3s;
+            }
+            button:hover {
+                background-color: #ddaf23;
+            }
+            .result {
+                font-weight: bold;
+                font-size: 20px;
+                margin-top: 20px;
+                color: #4CAF50;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .result label:last-child {
+                margin-left: 10px;
+                font-size: 20px;
+            }
+            .credits {
+                position: fixed;
+                bottom: 10px;
+                left: 10px;
+                font-size: 46px;
+                color: #fff;
+                font-family: 'Brush Script MT', cursive;
+            }
+        </style>
     </head>
     <body>
-        <h1>Demo Jenkins: Este Commit fue exitoso</h1>
-        <div>
-            <label>Operador 1:</label>
-            <input type="number" id="txtOperador1">
-            <br>
-            <label>Operador 2:</label>
-            <input type="number" id="txtOperador2">
-            <br>
-            <button id="btnSumar">Sumar</button>
-            <br>
-            <br>
-            <label style="font-weight: bold;">Resultado: </label>
-            <label id="lbResultado"></label>
+        <div class="header">
+            <h1>Demo Jenkins</h1>
+        </div>
+        <div class="container">
+            <h2>Este Commit fue exitoso</h2>
+            <div>
+                <label for="txtOperador1">Operador 1:</label>
+                <input type="number" id="txtOperador1">
+                <label for="txtOperador2">Operador 2:</label>
+                <input type="number" id="txtOperador2">
+                <button id="btnSumar">Sumar</button>
+                <div class="result">
+                    <label>Resultado</label>
+                    <label id="lbResultado"></label>
+                </div>
+            </div>
+        </div>
+        <div class="credits">
+            Josué Retana R.
         </div>
     </body>
     <script>
@@ -29,9 +136,9 @@
             $.ajax({
                 type: "POST",
                 url: "http://34.135.155.106:8083/post/suma",
-                dataType:"json",
+                dataType: "json",
                 contentType: 'application/x-www-form-urlencoded',
-                data: {operador1:operador1, operador2:operador2},
+                data: { operador1: operador1, operador2: operador2 },
                 success: function(data) {
                     $("#lbResultado").text(data.resultado);
                 }
