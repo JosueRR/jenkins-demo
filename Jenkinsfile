@@ -1,22 +1,17 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_USER     = credentials('dockerhub_user')
+        DOCKERHUB_USER = credentials('dockerhub_user')
         DOCKERHUB_PASSWORD = credentials('dockerhub_password')
-
-        // Usar la misma IP para DEV y PROD, pero cambiar según tus necesidades
-        DEV_URL = '34.135.155.106:8082'
-        PROD_URL = '34.135.155.106:8083'
-
-        JENKINS_HOME = '/home/jenkins'
     }
     stages {
         stage("BuildTests") {
             steps {
                 echo 'Building tests...'
                 sh '''
-                    docker-compose -f docker-compose-tests.yml down
-                    docker-compose -f docker-compose-tests.yml build
+                    docker build -t sumatest -f Dockerfile.test ./microservices/sum
+                    docker run --name sumatest sumatest
+                    docker rm sumatest
                 '''
             }
         }
@@ -24,7 +19,7 @@ pipeline {
             steps {
                 echo 'Running tests...'
                 sh '''
-                    docker-compose -f docker-compose-tests.yml up --exit-code-from SumaTest SumaTest
+                    docker run --name sumatest --rm sumatest
                 '''
             }
         }
@@ -32,8 +27,8 @@ pipeline {
             steps {
                 echo 'Building docker images for deployment...'
                 sh '''
-                    docker-compose -f docker-compose-dev.yml down
-                    docker-compose -f docker-compose-dev.yml build
+                    docker build -t jr/sum:latest ./microservices/sum
+                    docker build -t jr/webpage-src:latest ./webpage-src
                 '''
             }
         }
@@ -42,7 +37,8 @@ pipeline {
                 echo "Pushing docker images to DockerHub..."
                 sh '''
                     echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USER --password-stdin
-                    docker-compose -f docker-compose-dev.yml push
+                    docker push jr/sum:latest
+                    docker push jr/webpage-src:latest
                 '''
             }
         }
@@ -50,8 +46,12 @@ pipeline {
             steps {
                 echo "Deploying to development..."
                 sh '''
-                    docker-compose -f docker-compose-dev.yml down
-                    docker-compose -f docker-compose-dev.yml up -d
+                    docker stop sum || true
+                    docker rm sum || true
+                    docker stop webpage-src || true
+                    docker rm webpage-src || true
+                    docker run -d --name sum -p 8083:8080 jr/sum:latest
+                    docker run -d --name webpage-src -p 8082:80 jr/webpage-src:latest
                 '''
             }
         }
@@ -59,8 +59,12 @@ pipeline {
             steps {
                 echo 'Deploying to production...'
                 sh '''
-                    docker-compose -f docker-compose-prod.yml down
-                    docker-compose -f docker-compose-prod.yml up -d
+                    docker stop sum || true
+                    docker rm sum || true
+                    docker stop webpage-src || true
+                    docker rm webpage-src || true
+                    docker run -d --name sum -p 8083:8080 jr/sum:latest
+                    docker run -d --name webpage-src -p 8082:80 jr/webpage-src:latest
                 '''
             }
         }
