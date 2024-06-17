@@ -1,17 +1,17 @@
 version: '3.7'
 services:
   Suma:
-    container_name: suma
-    image: jr/suma:latest
+    container_name: sum
+    image: jr/sum:latest
     build:
       dockerfile: Dockerfile
-      context: ./microservicios/suma
+      context: ./microservices/sum
     ports:
       - '8090:8080'
 
   SitioWeb:
-    container_name: sitioweb
-    image: jr/sitioweb:latest
+    container_name: webpage-src
+    image: jr/webpage-src:latest
     build:
       dockerfile: Dockerfile
       context: ./webpage-src

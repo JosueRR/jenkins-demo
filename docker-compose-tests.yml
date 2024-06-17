@@ -1,8 +1,8 @@
 version: '3.7'
 services:
   SumaTest:
-    container_name: sumatest
-    image: jr/sumatest:latest
+    container_name: sumtest
+    image: jr/sumtest:latest
     build:
       dockerfile: Dockerfile.test
-      context: ./microservicios/suma
+      context: ./microservices/sum
