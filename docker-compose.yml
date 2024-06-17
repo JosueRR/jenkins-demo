@@ -17,10 +17,10 @@ services:
       - '8083:8080'
 
   SitioWeb:
-    container_name: sitioweb
-    image: jr/sitioweb:latest
+    container_name: webpage-src
+    image: jr/webpage-src:latest
     build:
       dockerfile: Dockerfile
-      context: ./sitio
+      context: ./webpage-src
     ports:
       - '8082:80'
