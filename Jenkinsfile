@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                git 'https://github.com/JosueRR/jenkins-demo.git'
+                git branch: 'main', url: 'https://github.com/JosueRR/jenkins-demo.git'
             }
         }
         stage('Build') {
